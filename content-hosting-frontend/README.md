@@ -55,6 +55,8 @@ A modern React TypeScript frontend for a content hosting platform that supports 
 
 4. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
+   
+   The app will automatically open in your browser!
 
 ## 🔐 Demo Credentials
 

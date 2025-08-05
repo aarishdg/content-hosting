@@ -70,5 +70,33 @@
    - Run `npm install` in `content-hosting-frontend` to install dependencies.
    - Start the frontend with `npm start`.
 
+## Demo Credentials
+You can use these demo accounts to log in and explore the app:
+
+- **Contributor:** `contributor@example.com` / `password`
+- **Public User:** `user@example.com` / `password`
+
+**How to set up these demo users:**
+
+1. Go to your Supabase project > Authentication > Users  
+2. Click "Add User" > create new user and enter the email and password for each demo account above.  
+   Check mark - "Auto Confirm User?" (where a confirmation email will not be sent when creating a user via this form.)
+3. For the contributor, set the `role` field in the `profiles` table to `contributor` (default is `public`).
+4. Alternatively, you can insert both demo users into the `profiles` table with this SQL (replace the UUIDs with those from your `auth.users` table):
+
+   ```sql
+   insert into public.profiles (id, email, role)
+   select
+     id,
+     email,
+     case
+       when email = 'contributor@example.com' then 'contributor'
+       else 'public'
+     end as role
+   from auth.users
+   where email in ('contributor@example.com', 'user@example.com');
+   ```
+5. You can now log in with these accounts in the app.
+
 ---
 For more details, see the Supabase documentation: https://supabase.com/docs

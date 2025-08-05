@@ -25,6 +25,11 @@
 6. **Start the Frontend**
    - Run `npm start`.
 
+## Demo Credentials
+You can use these demo accounts to log in and explore the app:
+- **Contributor:** `contributor@example.com` / `password`
+- **Public User:** `user@example.com` / `password`
+
 See the main project README for full SQL and policy examples.
 # ContentHub Frontend
 

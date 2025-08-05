@@ -15,7 +15,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, title, duration: propDur
   const [duration, setDuration] = useState(propDuration || 0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Start as loading until canplay
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -44,7 +44,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, title, duration: propDur
 
   const togglePlay = async () => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || loading) return;
 
     try {
       if (isPlaying) {
@@ -95,14 +95,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, title, duration: propDur
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
       <audio ref={audioRef} src={src} preload="metadata" />
-      
       <div className="mb-4">
         <h3 className="text-lg font-medium text-gray-900 mb-1">{title}</h3>
         <div className="text-sm text-gray-500">
           {formatDuration(Math.floor(currentTime))} / {formatDuration(Math.floor(duration))}
         </div>
       </div>
-
       {/* Progress Bar */}
       <div className="mb-4">
         <div className="relative">
@@ -116,10 +114,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, title, duration: propDur
             style={{
               background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${progressPercentage}%, #e5e7eb ${progressPercentage}%, #e5e7eb 100%)`
             }}
+            disabled={loading}
           />
         </div>
       </div>
-
       {/* Controls */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
@@ -129,7 +127,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, title, duration: propDur
             className="flex items-center justify-center w-10 h-10 bg-primary-600 text-white rounded-full hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {loading ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-primary-200 border-t-transparent rounded-full animate-spin" />
             ) : isPlaying ? (
               <PauseIcon className="w-5 h-5" />
             ) : (
@@ -137,12 +135,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, title, duration: propDur
             )}
           </button>
         </div>
-
         {/* Volume Control */}
         <div className="flex items-center space-x-2">
           <button
             onClick={toggleMute}
             className="text-gray-500 hover:text-gray-700 transition-colors"
+            disabled={loading}
           >
             {isMuted || volume === 0 ? (
               <SpeakerXMarkIcon className="w-5 h-5" />
@@ -158,9 +156,16 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, title, duration: propDur
             value={isMuted ? 0 : volume}
             onChange={handleVolumeChange}
             className="w-20 h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            disabled={loading}
           />
         </div>
       </div>
+      {loading && (
+        <div className="mt-4 text-center text-sm text-gray-500 flex items-center justify-center">
+          <div className="w-4 h-4 border-2 border-primary-200 border-t-transparent rounded-full animate-spin mr-2" />
+          Loading audio...
+        </div>
+      )}
     </div>
   );
 };

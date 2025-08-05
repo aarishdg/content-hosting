@@ -28,10 +28,10 @@ const DashboardPage: React.FC = () => {
   useEffect(() => {
     if (!user) return;
 
-    const loadContent = () => {
+    const loadContent = async () => {
       setLoading(true);
       try {
-        const userContent = ContentService.getContentByAuthor(user.id, filter);
+        const userContent = await ContentService.getContentByAuthor(user.id, filter);
         setContent(userContent);
       } catch (error) {
         console.error('Error loading content:', error);
@@ -46,10 +46,10 @@ const DashboardPage: React.FC = () => {
   const handleDeleteContent = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this content?')) {
       try {
-        ContentService.deleteContent(id);
+        await ContentService.deleteContent(id);
         // Reload content
         if (user) {
-          const userContent = ContentService.getContentByAuthor(user.id, filter);
+          const userContent = await ContentService.getContentByAuthor(user.id, filter);
           setContent(userContent);
         }
       } catch (error) {
@@ -67,7 +67,19 @@ const DashboardPage: React.FC = () => {
     podcasts: content.filter(c => c.content_type === 'podcast').length,
   };
 
-  const allTags = ContentService.getAllTags();
+  const [allTags, setAllTags] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const tags = await ContentService.getAllTags();
+        setAllTags(tags);
+      } catch (error) {
+        setAllTags([]);
+      }
+    };
+    fetchTags();
+  }, []);
 
   if (!user || user.role !== 'contributor') {
     return (

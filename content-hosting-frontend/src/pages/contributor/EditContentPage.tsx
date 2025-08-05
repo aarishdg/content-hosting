@@ -16,10 +16,10 @@ const EditContentPage: React.FC = () => {
   useEffect(() => {
     if (!id || !user) return;
 
-    const loadContent = () => {
+    const loadContent = async () => {
       setFormLoading(true);
       try {
-        const contentItem = ContentService.getContentById(id);
+        const contentItem = await ContentService.getContentById(id);
         if (contentItem && contentItem.author_id === user.id) {
           setContent(contentItem);
         } else {
@@ -41,11 +41,7 @@ const EditContentPage: React.FC = () => {
 
     setLoading(true);
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Update content
-      const updatedContent = ContentService.updateContent(id, {
+      const updatedContent = await ContentService.updateContent(id, {
         title: formData.title,
         description: formData.description,
         content_type: formData.content_type,

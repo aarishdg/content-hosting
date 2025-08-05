@@ -14,10 +14,10 @@ const PodcastsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadContent = () => {
+    const loadContent = async () => {
       setLoading(true);
       try {
-        const publishedContent = ContentService.getPublishedContent(filter);
+        const publishedContent = await ContentService.getPublishedContent(filter);
         setContent(publishedContent);
       } catch (error) {
         console.error('Error loading content:', error);
@@ -25,11 +25,21 @@ const PodcastsPage: React.FC = () => {
         setLoading(false);
       }
     };
-
     loadContent();
   }, [filter]);
 
-  const allTags = ContentService.getAllTags();
+  const [allTags, setAllTags] = useState<string[]>([]);
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const tags = await ContentService.getAllTags();
+        setAllTags(tags);
+      } catch (error) {
+        setAllTags([]);
+      }
+    };
+    fetchTags();
+  }, []);
 
   if (loading) {
     return (

@@ -20,10 +20,10 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadContent = () => {
+    const loadContent = async () => {
       setLoading(true);
       try {
-        const publishedContent = ContentService.getPublishedContent(filter);
+        const publishedContent = await ContentService.getPublishedContent(filter);
         setContent(publishedContent);
       } catch (error) {
         console.error('Error loading content:', error);
@@ -31,14 +31,25 @@ const HomePage: React.FC = () => {
         setLoading(false);
       }
     };
-
     loadContent();
   }, [filter]);
+
+  const [allTags, setAllTags] = useState<string[]>([]);
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const tags = await ContentService.getAllTags();
+        setAllTags(tags);
+      } catch {
+        setAllTags([]);
+      }
+    };
+    fetchTags();
+  }, []);
 
   const featuredContent = content.slice(0, 3);
   const recentArticles = content.filter(c => c.content_type === 'article').slice(0, 4);
   const recentPodcasts = content.filter(c => c.content_type === 'podcast').slice(0, 4);
-  const allTags = ContentService.getAllTags();
 
   if (loading) {
     return (

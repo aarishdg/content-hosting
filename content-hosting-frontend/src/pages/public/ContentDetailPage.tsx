@@ -25,19 +25,18 @@ const ContentDetailPage: React.FC = () => {
   useEffect(() => {
     if (!id) return;
 
-    const loadContent = () => {
+    const loadContent = async () => {
       setLoading(true);
       try {
-        const contentItem = ContentService.getContentById(id);
+        const contentItem = await ContentService.getContentById(id);
         if (contentItem && contentItem.status === 'published') {
           setContent(contentItem);
-          
           // Load related content (same type or similar tags)
-          const allContent = ContentService.getPublishedContent();
+          const allContent = await ContentService.getPublishedContent();
           const related = allContent
-            .filter(item => 
-              item.id !== contentItem.id && 
-              (item.content_type === contentItem.content_type || 
+            .filter(item =>
+              item.id !== contentItem.id &&
+              (item.content_type === contentItem.content_type ||
                item.tags.some(tag => contentItem.tags.includes(tag)))
             )
             .slice(0, 3);

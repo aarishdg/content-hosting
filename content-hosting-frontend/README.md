@@ -1,3 +1,31 @@
+# Supabase Setup Checklist
+
+1. **Create a Supabase Project**
+   - Go to https://app.supabase.com/ and create a new project.
+   - Get your Project URL and Anon Key from Project Settings > API.
+
+2. **Create Tables**
+   - Use the SQL Editor to create the following tables:
+   - `profiles` (for user roles)
+   - `content` (for articles and podcasts)
+
+3. **Enable Row Level Security (RLS) and Policies**
+   - Enable RLS for both `profiles` and `content` tables.
+   - Add policies:
+     - Public users: Can only select content where status = 'published'.
+     - Contributors: Can insert, update, delete only their own content.
+     - Users can only view/update their own profile.
+
+4. **Environment Variables**
+   - Copy `.env.example` to `.env` and fill in your Supabase URL and Anon Key.
+
+5. **Install Dependencies**
+   - Run `npm install` in this folder.
+
+6. **Start the Frontend**
+   - Run `npm start`.
+
+See the main project README for full SQL and policy examples.
 # ContentHub Frontend
 
 A modern React TypeScript frontend for a content hosting platform that supports articles and podcasts.

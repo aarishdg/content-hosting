@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -52,6 +52,14 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       },
     },
   });
+
+    // Whenever the `content` prop changes, update the editor to match
+  // Whenever the `content` prop changes, update the editor to match
+ useEffect(() => {
+    if (editor && content !== editor.getHTML()) {
+      editor.commands.setContent(content, { emitUpdate: false });
+    }
+  }, [content, editor]);
 
   const addImage = () => {
     const url = window.prompt('Enter image URL:');

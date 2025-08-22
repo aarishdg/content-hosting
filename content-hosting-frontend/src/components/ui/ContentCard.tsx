@@ -4,8 +4,11 @@ import { Content } from '../../types';
 import { formatDate, formatDuration, stripHtml, truncateText } from '../../utils/helpers';
 import { BookOpenIcon, MicrophoneIcon, ClockIcon, CalendarIcon } from '@heroicons/react/24/outline';
 
-interface ContentCardProps {
-  content: Content;
+export interface ContentCardProps {
+  /** The full content record (article or podcast) */
+  content: any;
+  /** Optional child elements (e.g. audio player or snippet) */
+  children?: React.ReactNode;
 }
 
 const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
@@ -61,7 +64,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
       {/* Tags */}
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-4">
-          {tags.slice(0, 3).map((tag) => (
+          {tags.slice(0, 3).map((tag:string) => (
             <span
               key={tag}
               className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
